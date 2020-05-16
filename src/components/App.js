@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Axios from 'axios'
+import axios from 'axios'
 
 import './App.css';
 import Post from './Post/Post'
@@ -21,19 +21,19 @@ class App extends Component {
   }
   
   componentDidMount() {
-    Axios.get('https://practiceapi.devmountain.com/api/posts')
+    axios.get('https://practiceapi.devmountain.com/api/posts')
     .then (res => this.setState({posts: res.data}))
     .catch(err => console.log('Data was not Imported'))
   }
 
-  updatePost(id, newText) {
-    Axios.put(`https://practiceapi.devmountain.com/api/posts/?id=${id}`, {newText})
+  updatePost(id, text) {
+    axios.put(`https://practiceapi.devmountain.com/api/posts?id=${id}`, {text})
     .then(res => this.setState({posts: res.data}))
     .catch(err => console.log('Post did not update'))
   }
 
-  deletePost() {
-
+  deletePost(id) {
+    axios.delete(`https://practiceapi.devmountain.com/api/posts?id=${id}`)
   }
 
   createPost() {
@@ -51,7 +51,7 @@ class App extends Component {
 
           <Compose />
           {posts.map(elem => {
-             return <Post postText={elem.text} postDate={elem.date} updatePostFn={this.updatePost} id={elem.id} key={elem.id}/>
+             return <Post text={elem.text} date={elem.date} updatePostFn={this.updatePost} id={elem.id} key={elem.id}/>
             })
           }
           
