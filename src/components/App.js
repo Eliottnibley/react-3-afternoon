@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import Axios from 'axios'
 
 import './App.css';
+import Post from './Post/Post'
 
 import Header from './Header/Header';
 import Compose from './Compose/Compose';
@@ -19,11 +21,15 @@ class App extends Component {
   }
   
   componentDidMount() {
-
+    Axios.get('https://practiceapi.devmountain.com/api/posts')
+    .then (res => this.setState({posts: res.data}))
+    .catch(err => console.log('Data was not Imported'))
   }
 
-  updatePost() {
-  
+  updatePost(id, newText) {
+    Axios.put(`https://practiceapi.devmountain.com/api/posts/?id=${id}`, {newText})
+    .then(res => this.setState({posts: res.data}))
+    .catch(err => console.log('Post did not update'))
   }
 
   deletePost() {
@@ -44,6 +50,10 @@ class App extends Component {
         <section className="App__content">
 
           <Compose />
+          {posts.map(elem => {
+             return <Post postText={elem.text} postDate={elem.date} updatePostFn={this.updatePost} id={elem.id} key={elem.id}/>
+            })
+          }
           
         </section>
       </div>
