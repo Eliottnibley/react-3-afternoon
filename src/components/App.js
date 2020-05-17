@@ -12,18 +12,23 @@ class App extends Component {
     super();
 
     this.state = {
-      posts: []
+      posts: [],
+      postsCopy: []
     };
 
     this.updatePost = this.updatePost.bind( this );
     this.deletePost = this.deletePost.bind( this );
     this.createPost = this.createPost.bind( this );
+    this.searchPost = this.searchPost.bind(this)
   }
   
   componentDidMount() {
     axios.get('https://practiceapi.devmountain.com/api/posts')
     .then (res => this.setState({posts: res.data}))
     .catch(err => console.log('Data was not Imported'))
+
+    axios.get('https://practiceapi.devmountain.com/api/posts')
+    .then (res => this.setState({postsCopy: res.data}))
   }
 
   updatePost(id, text) {
@@ -45,12 +50,21 @@ class App extends Component {
     .then(res => this.setState({posts: res.data}))
   }
 
+  searchPost(text){
+    if (text === ''){
+      this.setState({posts: this.state.postsCopy})
+    }
+    else {
+      this.setState({posts: this.state.postsCopy.filter(e => e.text.includes(text))})
+    }
+  }
+
   render() {
     const { posts } = this.state;
 
     return (
       <div className="App__parent">
-        <Header />
+        <Header searchPostFn={this.searchPost}/>
 
         <section className="App__content">
 
